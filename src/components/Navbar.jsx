@@ -8,41 +8,140 @@ const Navbar = () => {
 
   const isActive = (path) => location.pathname === path;
 
+  const navStyle = {
+    background: 'white',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000
+  };
+
+  const containerStyle = {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '0 20px'
+  };
+
+  const navContentStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: '64px'
+  };
+
+  const logoStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    textDecoration: 'none',
+    color: 'inherit'
+  };
+
+  const logoIconStyle = {
+    width: '40px',
+    height: '40px',
+    background: 'linear-gradient(135deg, #f49238, #e2580c)',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: '1.2rem',
+    marginRight: '12px'
+  };
+
+  const logoTextStyle = {
+    fontSize: '1.25rem',
+    fontWeight: 'bold',
+    color: '#1f2937',
+    lineHeight: 1.2
+  };
+
+  const logoSubtextStyle = {
+    fontSize: '0.75rem',
+    color: '#6b7280'
+  };
+
+  const desktopNavStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '2rem'
+  };
+
+  const mobileNavStyle = {
+    display: 'none'
+  };
+
+  const navLinkStyle = (active) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '8px 12px',
+    borderRadius: '6px',
+    textDecoration: 'none',
+    fontSize: '0.875rem',
+    fontWeight: '500',
+    transition: 'all 0.3s ease',
+    color: active ? '#e2580c' : '#374151',
+    backgroundColor: active ? '#fef7ed' : 'transparent'
+  });
+
+  const mobileMenuStyle = {
+    display: isOpen ? 'block' : 'none',
+    padding: '1rem 0',
+    backgroundColor: '#f9fafb'
+  };
+
+  const mobileNavLinkStyle = (active) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    padding: '12px 16px',
+    borderRadius: '6px',
+    textDecoration: 'none',
+    fontSize: '1rem',
+    fontWeight: '500',
+    transition: 'all 0.3s ease',
+    color: active ? '#e2580c' : '#374151',
+    backgroundColor: active ? '#fef7ed' : 'transparent',
+    margin: '4px 0'
+  });
+
+  const menuButtonStyle = {
+    background: 'none',
+    border: 'none',
+    color: '#374151',
+    cursor: 'pointer',
+    padding: '8px'
+  };
+
   return (
-    <nav className="bg-white shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav style={navStyle}>
+      <div style={containerStyle}>
+        <div style={navContentStyle}>
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-saffron-400 to-saffron-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">ॐ</span>
+          <Link to="/" style={logoStyle}>
+            <div style={logoIconStyle}>
+              <span>ॐ</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-800">ISKCON Barang</h1>
-              <p className="text-xs text-gray-600">Hare Krishna Temple</p>
+              <div style={logoTextStyle}>ISKCON Barang</div>
+              <div style={logoSubtextStyle}>Hare Krishna Temple</div>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div style={{ ...desktopNavStyle, '@media (max-width: 768px)': mobileNavStyle }}>
             <Link
               to="/"
-              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/') 
-                  ? 'text-saffron-600 bg-saffron-50' 
-                  : 'text-gray-700 hover:text-saffron-600 hover:bg-saffron-50'
-              }`}
+              style={navLinkStyle(isActive('/'))}
             >
               <Home size={16} />
               <span>Home</span>
             </Link>
             <Link
               to="/donation"
-              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/donation') 
-                  ? 'text-saffron-600 bg-saffron-50' 
-                  : 'text-gray-700 hover:text-saffron-600 hover:bg-saffron-50'
-              }`}
+              style={navLinkStyle(isActive('/donation'))}
             >
               <Heart size={16} />
               <span>Donate</span>
@@ -50,47 +149,33 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-saffron-600 focus:outline-none focus:text-saffron-600"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            style={{ ...menuButtonStyle, display: window.innerWidth <= 768 ? 'block' : 'none' }}
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
-              <Link
-                to="/"
-                onClick={() => setIsOpen(false)}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                  isActive('/') 
-                    ? 'text-saffron-600 bg-saffron-50' 
-                    : 'text-gray-700 hover:text-saffron-600 hover:bg-saffron-50'
-                }`}
-              >
-                <Home size={18} />
-                <span>Home</span>
-              </Link>
-              <Link
-                to="/donation"
-                onClick={() => setIsOpen(false)}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                  isActive('/donation') 
-                    ? 'text-saffron-600 bg-saffron-50' 
-                    : 'text-gray-700 hover:text-saffron-600 hover:bg-saffron-50'
-                }`}
-              >
-                <Heart size={18} />
-                <span>Donate</span>
-              </Link>
-            </div>
-          </div>
-        )}
+        <div style={mobileMenuStyle}>
+          <Link
+            to="/"
+            onClick={() => setIsOpen(false)}
+            style={mobileNavLinkStyle(isActive('/'))}
+          >
+            <Home size={18} />
+            <span>Home</span>
+          </Link>
+          <Link
+            to="/donation"
+            onClick={() => setIsOpen(false)}
+            style={mobileNavLinkStyle(isActive('/donation'))}
+          >
+            <Heart size={18} />
+            <span>Donate</span>
+          </Link>
+        </div>
       </div>
     </nav>
   );

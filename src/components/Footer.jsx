@@ -2,22 +2,96 @@ import React from 'react';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 const Footer = () => {
+  const footerStyle = {
+    background: '#111827',
+    color: 'white',
+    padding: '3rem 0'
+  };
+
+  const containerStyle = {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '0 20px'
+  };
+
+  const gridStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '2rem',
+    marginBottom: '2rem'
+  };
+
+  const logoStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '1rem'
+  };
+
+  const logoIconStyle = {
+    width: '32px',
+    height: '32px',
+    background: 'linear-gradient(135deg, #f49238, #e2580c)',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+    fontWeight: 'bold',
+    marginRight: '12px'
+  };
+
+  const sectionTitleStyle = {
+    fontSize: '1.125rem',
+    fontWeight: '600',
+    marginBottom: '1rem'
+  };
+
+  const contactItemStyle = {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '12px',
+    marginBottom: '12px'
+  };
+
+  const iconStyle = {
+    color: '#f49238',
+    marginTop: '2px',
+    flexShrink: 0
+  };
+
+  const textStyle = {
+    color: '#d1d5db',
+    lineHeight: 1.5
+  };
+
+  const subtextStyle = {
+    color: '#9ca3af',
+    fontSize: '0.875rem'
+  };
+
+  const copyrightStyle = {
+    borderTop: '1px solid #374151',
+    paddingTop: '2rem',
+    textAlign: 'center',
+    color: '#9ca3af'
+  };
+
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer style={footerStyle}>
+      <div style={containerStyle}>
+        <div style={gridStyle}>
           {/* Temple Info */}
           <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-saffron-400 to-saffron-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold">ॐ</span>
+            <div style={logoStyle}>
+              <div style={logoIconStyle}>
+                <span>ॐ</span>
               </div>
-              <h3 className="text-xl font-bold">ISKCON Barang</h3>
+              <h3 style={sectionTitleStyle}>ISKCON Barang</h3>
             </div>
-            <p className="text-gray-300 mb-4">
+            <p style={{ ...textStyle, marginBottom: '1rem' }}>
               International Society for Krishna Consciousness - Spreading the message of love, peace, and devotion through the teachings of Lord Krishna.
             </p>
-            <p className="text-sm text-gray-400">
+            <p style={subtextStyle}>
               "Hare Krishna, Hare Krishna, Krishna Krishna, Hare Hare<br />
               Hare Rama, Hare Rama, Rama Rama, Hare Hare"
             </p>
@@ -25,59 +99,55 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
-            <div className="space-y-3">
-              <div className="flex items-start space-x-3">
-                <MapPin className="text-saffron-400 mt-1 flex-shrink-0" size={16} />
-                <div>
-                  <p className="text-gray-300">ISKCON Temple</p>
-                  <p className="text-gray-300">Barang, Cuttack</p>
-                  <p className="text-gray-300">Odisha, India</p>
-                </div>
+            <h3 style={sectionTitleStyle}>Contact Information</h3>
+            <div style={contactItemStyle}>
+              <MapPin style={iconStyle} size={16} />
+              <div>
+                <p style={textStyle}>ISKCON Temple</p>
+                <p style={textStyle}>Barang, Cuttack</p>
+                <p style={textStyle}>Odisha, India</p>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="text-saffron-400 flex-shrink-0" size={16} />
-                <p className="text-gray-300">+91 98765 43210</p>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Mail className="text-saffron-400 flex-shrink-0" size={16} />
-                <p className="text-gray-300">info@iskconbarang.org</p>
-              </div>
+            </div>
+            <div style={contactItemStyle}>
+              <Phone style={iconStyle} size={16} />
+              <p style={textStyle}>+91 98765 43210</p>
+            </div>
+            <div style={contactItemStyle}>
+              <Mail style={iconStyle} size={16} />
+              <p style={textStyle}>info@iskconbarang.org</p>
             </div>
           </div>
 
           {/* Temple Timings */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Temple Timings</h3>
-            <div className="space-y-3">
-              <div className="flex items-start space-x-3">
-                <Clock className="text-saffron-400 mt-1 flex-shrink-0" size={16} />
-                <div>
-                  <p className="text-gray-300 font-medium">Morning Aarti</p>
-                  <p className="text-gray-400 text-sm">4:30 AM - 5:30 AM</p>
-                </div>
+            <h3 style={sectionTitleStyle}>Temple Timings</h3>
+            <div style={contactItemStyle}>
+              <Clock style={iconStyle} size={16} />
+              <div>
+                <p style={{ ...textStyle, fontWeight: '500' }}>Morning Aarti</p>
+                <p style={subtextStyle}>4:30 AM - 5:30 AM</p>
               </div>
-              <div className="flex items-start space-x-3">
-                <Clock className="text-saffron-400 mt-1 flex-shrink-0" size={16} />
-                <div>
-                  <p className="text-gray-300 font-medium">Evening Aarti</p>
-                  <p className="text-gray-400 text-sm">7:00 PM - 8:00 PM</p>
-                </div>
+            </div>
+            <div style={contactItemStyle}>
+              <Clock style={iconStyle} size={16} />
+              <div>
+                <p style={{ ...textStyle, fontWeight: '500' }}>Evening Aarti</p>
+                <p style={subtextStyle}>7:00 PM - 8:00 PM</p>
               </div>
-              <div className="flex items-start space-x-3">
-                <Clock className="text-saffron-400 mt-1 flex-shrink-0" size={16} />
-                <div>
-                  <p className="text-gray-300 font-medium">Darshan Hours</p>
-                  <p className="text-gray-400 text-sm">5:00 AM - 12:00 PM</p>
-                  <p className="text-gray-400 text-sm">4:00 PM - 9:00 PM</p>
-                </div>
+            </div>
+            <div style={contactItemStyle}>
+              <Clock style={iconStyle} size={16} />
+              <div>
+                <p style={{ ...textStyle, fontWeight: '500' }}>Darshan Hours</p>
+                <p style={subtextStyle}>5:00 AM - 12:00 PM</p>
+                <p style={subtextStyle}>4:00 PM - 9:00 PM</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="text-gray-400">
+        <div style={copyrightStyle}>
+          <p>
             © 2024 ISKCON Barang. All rights reserved. | Spreading Krishna Consciousness with Love and Devotion
           </p>
         </div>
