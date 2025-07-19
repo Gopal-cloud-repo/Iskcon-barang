@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Heart, Home } from 'lucide-react';
+import { Menu, X, Heart, Home, Info, Phone } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -140,6 +140,20 @@ const Navbar = () => {
               <span>Home</span>
             </Link>
             <Link
+              to="/about"
+              style={navLinkStyle(isActive('/about'))}
+            >
+              <Info size={16} />
+              <span>About</span>
+            </Link>
+            <Link
+              to="/contact"
+              style={navLinkStyle(isActive('/contact'))}
+            >
+              <Phone size={16} />
+              <span>Contact</span>
+            </Link>
+            <Link
               to="/donation"
               style={navLinkStyle(isActive('/donation'))}
             >
@@ -166,6 +180,22 @@ const Navbar = () => {
           >
             <Home size={18} />
             <span>Home</span>
+          </Link>
+          <Link
+            to="/about"
+            onClick={() => setIsOpen(false)}
+            style={mobileNavLinkStyle(isActive('/about'))}
+          >
+            <Info size={18} />
+            <span>About</span>
+          </Link>
+          <Link
+            to="/contact"
+            onClick={() => setIsOpen(false)}
+            style={mobileNavLinkStyle(isActive('/contact'))}
+          >
+            <Phone size={18} />
+            <span>Contact</span>
           </Link>
           <Link
             to="/donation"
