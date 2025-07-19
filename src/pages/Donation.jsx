@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Heart, CreditCard, Smartphone, Building, Gift, Users, BookOpen, Home } from 'lucide-react';
+import { Heart, CreditCard, Smartphone, Building, Gift, Users, BookOpen, Home, Shield, CheckCircle, Star, Globe } from 'lucide-react';
 
 const Donation = () => {
   const [selectedAmount, setSelectedAmount] = useState('');
   const [customAmount, setCustomAmount] = useState('');
   const [donationType, setDonationType] = useState('general');
   const [paymentMethod, setPaymentMethod] = useState('upi');
+  const [frequency, setFrequency] = useState('one-time');
   const [showDonorForm, setShowDonorForm] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [donorInfo, setDonorInfo] = useState({
     name: '',
     email: '',
@@ -14,47 +16,85 @@ const Donation = () => {
     address: '',
     city: '',
     state: '',
-    pincode: ''
+    pincode: '',
+    panNumber: ''
   });
 
-  const predefinedAmounts = ['₹501', '₹1001', '₹2501', '₹5001', '₹10001'];
+  const predefinedAmounts = [
+    { amount: '₹501', impact: 'Sponsors prasadam for 10 devotees' },
+    { amount: '₹1001', impact: 'Supports daily temple operations' },
+    { amount: '₹2501', impact: 'Funds spiritual education programs' },
+    { amount: '₹5001', impact: 'Sponsors a festival celebration' },
+    { amount: '₹10001', impact: 'Major temple development support' },
+    { amount: '₹25001', impact: 'Significant infrastructure contribution' }
+  ];
 
   const donationCategories = [
     {
       id: 'general',
       icon: <Heart size={24} />,
       title: 'General Donation',
-      description: 'Support our daily temple operations and spiritual activities'
+      description: 'Support our daily temple operations and spiritual activities',
+      impact: 'Helps maintain temple facilities and daily worship'
     },
     {
       id: 'prasadam',
       icon: <Gift size={24} />,
       title: 'Prasadam Seva',
-      description: 'Sponsor daily prasadam distribution to devotees and visitors'
+      description: 'Sponsor daily prasadam distribution to devotees and visitors',
+      impact: 'Feeds hungry souls with sanctified food'
     },
     {
       id: 'construction',
       icon: <Building size={24} />,
       title: 'Temple Development',
-      description: 'Contribute to temple construction and infrastructure development'
+      description: 'Contribute to temple construction and infrastructure development',
+      impact: 'Creates lasting spiritual infrastructure'
     },
     {
       id: 'education',
       icon: <BookOpen size={24} />,
       title: 'Spiritual Education',
-      description: 'Support our spiritual education programs and book distribution'
+      description: 'Support our spiritual education programs and book distribution',
+      impact: 'Spreads Krishna consciousness through knowledge'
     },
     {
       id: 'festival',
       icon: <Users size={24} />,
       title: 'Festival Celebration',
-      description: 'Sponsor special festivals and community celebrations'
+      description: 'Sponsor special festivals and community celebrations',
+      impact: 'Brings joy and spiritual upliftment to community'
     },
     {
       id: 'accommodation',
       icon: <Home size={24} />,
       title: 'Guest House',
-      description: 'Support accommodation facilities for visiting devotees'
+      description: 'Support accommodation facilities for visiting devotees',
+      impact: 'Provides shelter for spiritual seekers'
+    }
+  ];
+
+  const paymentMethods = [
+    {
+      id: 'upi',
+      icon: <Smartphone size={24} />,
+      title: 'UPI Payment',
+      description: 'Google Pay, PhonePe, Paytm, BHIM',
+      fee: 'No processing fee'
+    },
+    {
+      id: 'card',
+      icon: <CreditCard size={24} />,
+      title: 'Credit/Debit Card',
+      description: 'Visa, Mastercard, RuPay, Amex',
+      fee: '2.5% processing fee'
+    },
+    {
+      id: 'netbanking',
+      icon: <Building size={24} />,
+      title: 'Net Banking',
+      description: 'All major banks supported',
+      fee: '1.5% processing fee'
     }
   ];
 
@@ -67,7 +107,7 @@ const Donation = () => {
   const handleCustomAmountChange = (e) => {
     setCustomAmount(e.target.value);
     setSelectedAmount('');
-    if (e.target.value) {
+    if (e.target.value && parseInt(e.target.value) >= 100) {
       setShowDonorForm(true);
     } else {
       setShowDonorForm(false);
@@ -81,20 +121,46 @@ const Donation = () => {
     }));
   };
 
-  const handleDonate = () => {
-    const amount = selectedAmount || `₹${customAmount}`;
-    if (!amount || amount === '₹') {
-      alert('Please select or enter a donation amount');
+  const handleDonate = async () => {
+    const amount = selectedAmount ? selectedAmount.replace('₹', '') : customAmount;
+    if (!amount || parseInt(amount) < 100) {
+      alert('Minimum donation amount is ₹100');
       return;
     }
+
+    if (!donorInfo.name || !donorInfo.email || !donorInfo.phone) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    setIsProcessing(true);
     
-    alert(`Thank you for your generous donation of ${amount} for ${donationCategories.find(cat => cat.id === donationType)?.title}!`);
+    // Simulate payment processing
+    setTimeout(() => {
+      setIsProcessing(false);
+      alert(`Thank you ${donorInfo.name} for your generous donation of ₹${amount} for ${donationCategories.find(cat => cat.id === donationType)?.title}! Your donation receipt will be sent to ${donorInfo.email}`);
+      
+      // Reset form
+      setSelectedAmount('');
+      setCustomAmount('');
+      setShowDonorForm(false);
+      setDonorInfo({
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        city: '',
+        state: '',
+        pincode: '',
+        panNumber: ''
+      });
+    }, 2000);
   };
 
   const pageStyle = {
     background: 'linear-gradient(135deg, #fef7ed, #f0f9ff)',
     minHeight: '100vh',
-    padding: '3rem 0'
+    padding: '2rem 0'
   };
 
   const headerStyle = {
@@ -103,8 +169,8 @@ const Donation = () => {
   };
 
   const headerIconStyle = {
-    width: '64px',
-    height: '64px',
+    width: '80px',
+    height: '80px',
     background: 'linear-gradient(135deg, #f49238, #e2580c)',
     borderRadius: '50%',
     display: 'flex',
@@ -119,27 +185,22 @@ const Donation = () => {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))',
     gap: '2rem',
-    maxWidth: '1200px',
+    maxWidth: '1400px',
     margin: '0 auto',
     padding: '0 20px'
   };
 
-  const impactItemStyle = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '12px',
-    marginBottom: '1rem'
-  };
-
-  const impactIconStyle = {
-    width: '32px',
-    height: '32px',
-    background: '#fef7ed',
-    borderRadius: '50%',
+  const trustBadgeStyle = {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0
+    gap: '8px',
+    padding: '8px 16px',
+    background: '#f0fdf4',
+    border: '1px solid #bbf7d0',
+    borderRadius: '6px',
+    fontSize: '0.875rem',
+    color: '#166534',
+    marginBottom: '1rem'
   };
 
   return (
@@ -148,38 +209,95 @@ const Donation = () => {
         {/* Header */}
         <div style={headerStyle}>
           <div style={headerIconStyle}>
-            <Heart size={32} />
+            <Heart size={40} />
           </div>
-          <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>
+          <h1 style={{ fontSize: '3rem', marginBottom: '1rem', background: 'linear-gradient(135deg, #e2580c, #f49238)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             Support Our Sacred Mission
           </h1>
-          <p style={{ fontSize: '1.125rem', color: '#6b7280', maxWidth: '600px', margin: '0 auto' }}>
+          <p style={{ fontSize: '1.25rem', color: '#6b7280', maxWidth: '800px', margin: '0 auto 2rem' }}>
             Your generous contribution helps us spread Krishna consciousness, serve the community, 
             and maintain our beautiful temple for future generations.
           </p>
+          
+          {/* Trust Badges */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <div style={trustBadgeStyle}>
+              <Shield size={16} />
+              <span>Secure Payment</span>
+            </div>
+            <div style={trustBadgeStyle}>
+              <CheckCircle size={16} />
+              <span>80G Tax Exemption</span>
+            </div>
+            <div style={trustBadgeStyle}>
+              <Star size={16} />
+              <span>Trusted by 5000+ Devotees</span>
+            </div>
+          </div>
         </div>
 
         <div style={mainGridStyle}>
           {/* Donation Form */}
-          <div className="card">
-            <h2 style={{ marginBottom: '1.5rem' }}>Make a Donation</h2>
+          <div className="card" style={{ order: 1 }}>
+            <h2 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Globe size={24} style={{ color: '#e2580c' }} />
+              Make a Donation
+            </h2>
             
+            {/* Donation Frequency */}
+            <div className="form-group">
+              <label className="form-label">Donation Frequency</label>
+              <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                <button
+                  onClick={() => setFrequency('one-time')}
+                  className={`btn ${frequency === 'one-time' ? 'btn-primary' : 'btn-outline'}`}
+                  style={{ flex: 1, border: frequency === 'one-time' ? 'none' : '2px solid #d1d5db', color: frequency === 'one-time' ? 'white' : '#6b7280' }}
+                >
+                  One-time
+                </button>
+                <button
+                  onClick={() => setFrequency('monthly')}
+                  className={`btn ${frequency === 'monthly' ? 'btn-primary' : 'btn-outline'}`}
+                  style={{ flex: 1, border: frequency === 'monthly' ? 'none' : '2px solid #d1d5db', color: frequency === 'monthly' ? 'white' : '#6b7280' }}
+                >
+                  Monthly
+                </button>
+              </div>
+            </div>
+
             {/* Donation Category */}
             <div className="form-group">
-              <label className="form-label">Choose Donation Category</label>
-              <div className="donation-categories">
+              <label className="form-label">Choose Seva Category</label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
                 {donationCategories.map((category) => (
                   <div
                     key={category.id}
                     onClick={() => setDonationType(category.id)}
-                    className={`donation-category ${donationType === category.id ? 'active' : ''}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '12px',
+                      padding: '1rem',
+                      border: `2px solid ${donationType === category.id ? '#e2580c' : '#e5e7eb'}`,
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      background: donationType === category.id ? '#fef7ed' : 'white'
+                    }}
                   >
-                    <div className="category-icon">
+                    <div style={{ color: '#e2580c', marginTop: '2px' }}>
                       {category.icon}
                     </div>
-                    <div className="category-info">
-                      <h4>{category.title}</h4>
-                      <p>{category.description}</p>
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{ fontWeight: '600', color: '#1f2937', marginBottom: '4px', fontSize: '0.95rem' }}>
+                        {category.title}
+                      </h4>
+                      <p style={{ fontSize: '0.8rem', color: '#6b7280', margin: '0 0 4px 0', lineHeight: 1.4 }}>
+                        {category.description}
+                      </p>
+                      <p style={{ fontSize: '0.75rem', color: '#e2580c', margin: 0, fontWeight: '500' }}>
+                        {category.impact}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -188,42 +306,65 @@ const Donation = () => {
 
             {/* Amount Selection */}
             <div className="form-group">
-              <label className="form-label">Select Amount</label>
-              <div className="amount-grid">
-                {predefinedAmounts.map((amount) => (
+              <label className="form-label">Select Donation Amount</label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                {predefinedAmounts.map((item) => (
                   <button
-                    key={amount}
-                    onClick={() => handleAmountSelect(amount)}
-                    className={`amount-btn ${selectedAmount === amount ? 'active' : ''}`}
+                    key={item.amount}
+                    onClick={() => handleAmountSelect(item.amount)}
+                    style={{
+                      padding: '1rem',
+                      border: `2px solid ${selectedAmount === item.amount ? '#e2580c' : '#e5e7eb'}`,
+                      borderRadius: '8px',
+                      background: selectedAmount === item.amount ? '#e2580c' : 'white',
+                      color: selectedAmount === item.amount ? 'white' : '#1f2937',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      textAlign: 'center'
+                    }}
                   >
-                    {amount}
+                    <div style={{ fontSize: '1.125rem', fontWeight: 'bold', marginBottom: '4px' }}>
+                      {item.amount}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>
+                      {item.impact}
+                    </div>
                   </button>
                 ))}
               </div>
               
               <div style={{ position: 'relative' }}>
-                <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#6b7280' }}>₹</span>
+                <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#6b7280', fontWeight: 'bold' }}>₹</span>
                 <input
                   type="number"
-                  placeholder="Enter custom amount"
+                  placeholder="Enter custom amount (min ₹100)"
                   value={customAmount}
                   onChange={handleCustomAmountChange}
                   className="form-input"
-                  style={{ paddingLeft: '32px' }}
+                  style={{ paddingLeft: '32px', fontSize: '1rem' }}
+                  min="100"
                 />
               </div>
+              {customAmount && parseInt(customAmount) < 100 && (
+                <p style={{ color: '#dc2626', fontSize: '0.875rem', marginTop: '4px' }}>
+                  Minimum donation amount is ₹100
+                </p>
+              )}
             </div>
 
             {/* Donor Information Form */}
             {showDonorForm && (
-              <div className="form-group" style={{ 
+              <div style={{ 
                 background: '#f8fafc', 
                 padding: '1.5rem', 
-                borderRadius: '8px', 
+                borderRadius: '12px', 
                 border: '1px solid #e2e8f0',
                 marginTop: '1rem'
               }}>
-                <h3 style={{ marginBottom: '1rem', color: '#1f2937' }}>Donor Information</h3>
+                <h3 style={{ marginBottom: '1rem', color: '#1f2937', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle size={20} style={{ color: '#e2580c' }} />
+                  Donor Information
+                </h3>
                 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
                   <div>
@@ -300,146 +441,208 @@ const Donation = () => {
                 </div>
                 
                 <div style={{ marginTop: '1rem' }}>
-                  <label className="form-label">Address</label>
+                  <label className="form-label">Complete Address</label>
                   <textarea
                     placeholder="Enter your complete address"
                     value={donorInfo.address}
                     onChange={(e) => handleDonorInfoChange('address', e.target.value)}
                     className="form-input"
-                    rows="3"
+                    rows="2"
                     style={{ resize: 'vertical' }}
                   />
                 </div>
-                
-                <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '1rem', marginBottom: 0 }}>
-                  * Required fields. This information will be used for donation receipt and tax exemption certificate.
-                </p>
+
+                <div style={{ marginTop: '1rem' }}>
+                  <label className="form-label">PAN Number (for 80G certificate)</label>
+                  <input
+                    type="text"
+                    placeholder="Enter PAN number for tax exemption"
+                    value={donorInfo.panNumber}
+                    onChange={(e) => handleDonorInfoChange('panNumber', e.target.value.toUpperCase())}
+                    className="form-input"
+                    maxLength="10"
+                  />
+                  <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '4px' }}>
+                    Required for donations above ₹2000 for 80G tax exemption certificate
+                  </p>
+                </div>
               </div>
             )}
 
             {/* Payment Method */}
             {showDonorForm && (
               <div className="form-group">
-              <label className="form-label">Payment Method</label>
-              <div>
-                <div
-                  onClick={() => setPaymentMethod('upi')}
-                  className={`payment-method ${paymentMethod === 'upi' ? 'active' : ''}`}
-                >
-                  <div className="payment-icon">
-                    <Smartphone size={24} />
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: '600', color: '#1f2937' }}>UPI Payment</div>
-                    <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>Pay using Google Pay, PhonePe, Paytm</div>
-                  </div>
+                <label className="form-label">Choose Payment Method</label>
+                <div style={{ display: 'grid', gap: '1rem' }}>
+                  {paymentMethods.map((method) => (
+                    <div
+                      key={method.id}
+                      onClick={() => setPaymentMethod(method.id)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '16px',
+                        padding: '1rem',
+                        border: `2px solid ${paymentMethod === method.id ? '#e2580c' : '#e5e7eb'}`,
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        background: paymentMethod === method.id ? '#fef7ed' : 'white'
+                      }}
+                    >
+                      <div style={{ color: '#e2580c' }}>
+                        {method.icon}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: '600', color: '#1f2937', marginBottom: '2px' }}>
+                          {method.title}
+                        </div>
+                        <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+                          {method.description}
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#059669', fontWeight: '500' }}>
+                        {method.fee}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                
-                <div
-                  onClick={() => setPaymentMethod('card')}
-                  className={`payment-method ${paymentMethod === 'card' ? 'active' : ''}`}
-                >
-                  <div className="payment-icon">
-                    <CreditCard size={24} />
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: '600', color: '#1f2937' }}>Credit/Debit Card</div>
-                    <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>Visa, Mastercard, RuPay accepted</div>
-                  </div>
-                </div>
-              </div>
               </div>
             )}
 
             {/* Donate Button */}
             {showDonorForm && (
-              <button
-              onClick={handleDonate}
-              className="btn btn-primary"
-              style={{ width: '100%', fontSize: '1.125rem', padding: '16px 24px' }}
-            >
-              <Heart className="icon" style={{ marginRight: '8px' }} />
-              Donate Now
-              </button>
-            )}
+              <div>
+                <button
+                  onClick={handleDonate}
+                  disabled={isProcessing}
+                  className="btn btn-primary"
+                  style={{ 
+                    width: '100%', 
+                    fontSize: '1.125rem', 
+                    padding: '16px 24px',
+                    background: isProcessing ? '#9ca3af' : 'linear-gradient(135deg, #e2580c, #f49238)',
+                    border: 'none',
+                    cursor: isProcessing ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  {isProcessing ? (
+                    <>
+                      <div style={{ 
+                        width: '20px', 
+                        height: '20px', 
+                        border: '2px solid #ffffff', 
+                        borderTop: '2px solid transparent', 
+                        borderRadius: '50%', 
+                        animation: 'spin 1s linear infinite',
+                        marginRight: '8px'
+                      }} />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <Heart className="icon" style={{ marginRight: '8px' }} />
+                      Donate {selectedAmount || (customAmount ? `₹${customAmount}` : '')} Securely
+                    </>
+                  )}
+                </button>
 
-            {showDonorForm && (
-              <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '1rem', textAlign: 'center' }}>
-              Your donation is secure and helps support our temple activities. 
-              Tax exemption certificate will be provided for donations above ₹500.
-              </p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '1rem' }}>
+                  <Shield size={16} style={{ color: '#059669' }} />
+                  <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: 0, textAlign: 'center' }}>
+                    Your donation is secure and encrypted. Tax exemption receipt will be sent via email.
+                  </p>
+                </div>
+              </div>
             )}
           </div>
 
-          {/* Donation Impact */}
-          <div>
-            <div className="card mb-3">
-              <h3 style={{ marginBottom: '1rem' }}>Your Impact</h3>
-              <div>
-                <div style={impactItemStyle}>
-                  <div style={impactIconStyle}>
-                    <Gift size={16} style={{ color: '#e2580c' }} />
+          {/* Sidebar Information */}
+          <div style={{ order: 2 }}>
+            {/* Impact Section */}
+            <div className="card mb-3" style={{ background: 'linear-gradient(135deg, #fef7ed, #fff7ed)' }}>
+              <h3 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Star size={20} style={{ color: '#e2580c' }} />
+                Your Impact
+              </h3>
+              <div style={{ display: 'grid', gap: '1rem' }}>
+                {[
+                  { amount: '₹501', impact: 'Sponsors prasadam for 10 devotees', icon: <Gift size={16} /> },
+                  { amount: '₹1001', impact: 'Supports daily temple operations', icon: <Heart size={16} /> },
+                  { amount: '₹2501', impact: 'Funds spiritual education programs', icon: <BookOpen size={16} /> },
+                  { amount: '₹5001', impact: 'Sponsors a festival celebration', icon: <Users size={16} /> }
+                ].map((item, index) => (
+                  <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 0' }}>
+                    <div style={{ 
+                      width: '32px', 
+                      height: '32px', 
+                      background: '#fef7ed', 
+                      borderRadius: '50%', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      color: '#e2580c'
+                    }}>
+                      {item.icon}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: '600', color: '#e2580c', fontSize: '0.9rem' }}>{item.amount}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>{item.impact}</div>
+                    </div>
                   </div>
-                  <div>
-                    <h4 style={{ fontWeight: '600', color: '#1f2937', margin: 0 }}>₹501</h4>
-                    <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: 0 }}>Sponsors prasadam for 10 devotees</p>
-                  </div>
-                </div>
-                <div style={impactItemStyle}>
-                  <div style={impactIconStyle}>
-                    <BookOpen size={16} style={{ color: '#e2580c' }} />
-                  </div>
-                  <div>
-                    <h4 style={{ fontWeight: '600', color: '#1f2937', margin: 0 }}>₹1001</h4>
-                    <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: 0 }}>Supports spiritual books distribution</p>
-                  </div>
-                </div>
-                <div style={impactItemStyle}>
-                  <div style={impactIconStyle}>
-                    <Users size={16} style={{ color: '#e2580c' }} />
-                  </div>
-                  <div>
-                    <h4 style={{ fontWeight: '600', color: '#1f2937', margin: 0 }}>₹5001</h4>
-                    <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: 0 }}>Sponsors a festival celebration</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
+            {/* Why Donate */}
             <div className="card mb-3">
-              <h3 style={{ marginBottom: '1rem' }}>Why Donate?</h3>
+              <h3 style={{ marginBottom: '1rem' }}>Why Your Support Matters</h3>
               <ul style={{ listStyle: 'none', padding: 0, color: '#6b7280' }}>
-                <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '12px' }}>
-                  <span style={{ color: '#f17316', marginTop: '4px' }}>•</span>
-                  <span>Support daily temple operations and maintenance</span>
-                </li>
-                <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '12px' }}>
-                  <span style={{ color: '#f17316', marginTop: '4px' }}>•</span>
-                  <span>Enable free prasadam distribution to all visitors</span>
-                </li>
-                <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '12px' }}>
-                  <span style={{ color: '#f17316', marginTop: '4px' }}>•</span>
-                  <span>Fund spiritual education and cultural programs</span>
-                </li>
-                <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '12px' }}>
-                  <span style={{ color: '#f17316', marginTop: '4px' }}>•</span>
-                  <span>Help expand our community outreach initiatives</span>
-                </li>
+                {[
+                  'Maintain daily temple operations and deity worship',
+                  'Provide free prasadam to all visitors',
+                  'Support spiritual education and cultural programs',
+                  'Help expand community outreach initiatives',
+                  'Preserve and promote Vedic culture and values'
+                ].map((item, index) => (
+                  <li key={index} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '12px' }}>
+                    <CheckCircle size={16} style={{ color: '#059669', marginTop: '2px', flexShrink: 0 }} />
+                    <span style={{ fontSize: '0.9rem' }}>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            <div className="card" style={{ background: 'linear-gradient(135deg, #fef7ed, #fff7ed)' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '8px' }}>
-                "Give, and it will be given to you"
+            {/* Trust & Security */}
+            <div className="card" style={{ background: 'linear-gradient(135deg, #f0fdf4, #ecfdf5)' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
+                Trusted & Secure
               </h3>
-              <p style={{ color: '#6b7280', fontSize: '0.875rem', fontStyle: 'italic', margin: 0 }}>
-                Every act of giving is an act of devotion. Your contribution helps us serve Krishna 
-                and spread His divine love throughout the community.
-              </p>
+              <div style={{ display: 'grid', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Shield size={16} style={{ color: '#059669' }} />
+                  <span style={{ fontSize: '0.875rem', color: '#166534' }}>256-bit SSL encryption</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle size={16} style={{ color: '#059669' }} />
+                  <span style={{ fontSize: '0.875rem', color: '#166534' }}>80G tax exemption available</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Star size={16} style={{ color: '#059669' }} />
+                  <span style={{ fontSize: '0.875rem', color: '#166534' }}>Trusted by 5000+ devotees</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };
