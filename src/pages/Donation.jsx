@@ -6,6 +6,16 @@ const Donation = () => {
   const [customAmount, setCustomAmount] = useState('');
   const [donationType, setDonationType] = useState('general');
   const [paymentMethod, setPaymentMethod] = useState('upi');
+  const [showDonorForm, setShowDonorForm] = useState(false);
+  const [donorInfo, setDonorInfo] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    pincode: ''
+  });
 
   const predefinedAmounts = ['₹501', '₹1001', '₹2501', '₹5001', '₹10001'];
 
@@ -51,11 +61,24 @@ const Donation = () => {
   const handleAmountSelect = (amount) => {
     setSelectedAmount(amount);
     setCustomAmount('');
+    setShowDonorForm(true);
   };
 
   const handleCustomAmountChange = (e) => {
     setCustomAmount(e.target.value);
     setSelectedAmount('');
+    if (e.target.value) {
+      setShowDonorForm(true);
+    } else {
+      setShowDonorForm(false);
+    }
+  };
+
+  const handleDonorInfoChange = (field, value) => {
+    setDonorInfo(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const handleDonate = () => {
@@ -191,8 +214,112 @@ const Donation = () => {
               </div>
             </div>
 
+            {/* Donor Information Form */}
+            {showDonorForm && (
+              <div className="form-group" style={{ 
+                background: '#f8fafc', 
+                padding: '1.5rem', 
+                borderRadius: '8px', 
+                border: '1px solid #e2e8f0',
+                marginTop: '1rem'
+              }}>
+                <h3 style={{ marginBottom: '1rem', color: '#1f2937' }}>Donor Information</h3>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+                  <div>
+                    <label className="form-label">Full Name *</label>
+                    <input
+                      type="text"
+                      placeholder="Enter your full name"
+                      value={donorInfo.name}
+                      onChange={(e) => handleDonorInfoChange('name', e.target.value)}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="form-label">Email Address *</label>
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      value={donorInfo.email}
+                      onChange={(e) => handleDonorInfoChange('email', e.target.value)}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="form-label">Phone Number *</label>
+                    <input
+                      type="tel"
+                      placeholder="Enter your phone number"
+                      value={donorInfo.phone}
+                      onChange={(e) => handleDonorInfoChange('phone', e.target.value)}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="form-label">City *</label>
+                    <input
+                      type="text"
+                      placeholder="Enter your city"
+                      value={donorInfo.city}
+                      onChange={(e) => handleDonorInfoChange('city', e.target.value)}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="form-label">State *</label>
+                    <input
+                      type="text"
+                      placeholder="Enter your state"
+                      value={donorInfo.state}
+                      onChange={(e) => handleDonorInfoChange('state', e.target.value)}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="form-label">PIN Code *</label>
+                    <input
+                      type="text"
+                      placeholder="Enter PIN code"
+                      value={donorInfo.pincode}
+                      onChange={(e) => handleDonorInfoChange('pincode', e.target.value)}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div style={{ marginTop: '1rem' }}>
+                  <label className="form-label">Address</label>
+                  <textarea
+                    placeholder="Enter your complete address"
+                    value={donorInfo.address}
+                    onChange={(e) => handleDonorInfoChange('address', e.target.value)}
+                    className="form-input"
+                    rows="3"
+                    style={{ resize: 'vertical' }}
+                  />
+                </div>
+                
+                <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '1rem', marginBottom: 0 }}>
+                  * Required fields. This information will be used for donation receipt and tax exemption certificate.
+                </p>
+              </div>
+            )}
+
             {/* Payment Method */}
-            <div className="form-group">
+            {showDonorForm && (
+              <div className="form-group">
               <label className="form-label">Payment Method</label>
               <div>
                 <div
@@ -221,22 +348,27 @@ const Donation = () => {
                   </div>
                 </div>
               </div>
-            </div>
+              </div>
+            )}
 
             {/* Donate Button */}
-            <button
+            {showDonorForm && (
+              <button
               onClick={handleDonate}
               className="btn btn-primary"
               style={{ width: '100%', fontSize: '1.125rem', padding: '16px 24px' }}
             >
               <Heart className="icon" style={{ marginRight: '8px' }} />
               Donate Now
-            </button>
+              </button>
+            )}
 
-            <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '1rem', textAlign: 'center' }}>
+            {showDonorForm && (
+              <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '1rem', textAlign: 'center' }}>
               Your donation is secure and helps support our temple activities. 
               Tax exemption certificate will be provided for donations above ₹500.
-            </p>
+              </p>
+            )}
           </div>
 
           {/* Donation Impact */}
