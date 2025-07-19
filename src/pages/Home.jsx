@@ -40,24 +40,33 @@ const Home = () => {
   ];
 
   const heroStyle = {
-    background: 'linear-gradient(135deg, #fef7ed, #f0f9ff)',
+    background: `linear-gradient(rgba(254, 247, 237, 0.9), rgba(240, 249, 255, 0.9)), url('https://images.pexels.com/photos/8828489/pexels-photo-8828489.jpeg?auto=compress&cs=tinysrgb&w=1600')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed',
     padding: '6rem 0',
     textAlign: 'center'
   };
 
   const servicesStyle = {
     padding: '4rem 0',
-    background: 'white'
+    background: `linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('https://images.pexels.com/photos/8828492/pexels-photo-8828492.jpeg?auto=compress&cs=tinysrgb&w=1600')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center'
   };
 
   const eventsStyle = {
     padding: '4rem 0',
-    background: '#f9fafb'
+    background: `linear-gradient(rgba(249, 250, 251, 0.95), rgba(249, 250, 251, 0.95)), url('https://images.pexels.com/photos/8828490/pexels-photo-8828490.jpeg?auto=compress&cs=tinysrgb&w=1600')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center'
   };
 
   const ctaStyle = {
     padding: '4rem 0',
-    background: 'linear-gradient(135deg, #f17316, #ff8c00)',
+    background: `linear-gradient(rgba(241, 115, 22, 0.9), rgba(255, 140, 0, 0.9)), url('https://images.pexels.com/photos/8828491/pexels-photo-8828491.jpeg?auto=compress&cs=tinysrgb&w=1600')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
     color: 'white',
     textAlign: 'center'
   };

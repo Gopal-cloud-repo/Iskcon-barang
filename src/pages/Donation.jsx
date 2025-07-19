@@ -135,30 +135,86 @@ const Donation = () => {
 
     setIsProcessing(true);
     
-    // Simulate payment processing
-    setTimeout(() => {
+    try {
+      // Prepare payment data
+      const paymentData = {
+        amount: parseInt(amount) * 100, // Convert to paise for Razorpay
+        currency: 'INR',
+        receipt: `receipt_${Date.now()}`,
+        notes: {
+          donation_type: donationType,
+          donor_name: donorInfo.name,
+          donor_email: donorInfo.email,
+          donor_phone: donorInfo.phone
+        }
+      };
+
+      // Initialize Razorpay payment
+      const options = {
+        key: 'rzp_test_1234567890', // Replace with your Razorpay key
+        amount: paymentData.amount,
+        currency: paymentData.currency,
+        name: 'ISKCON Barang',
+        description: `Donation for ${donationCategories.find(cat => cat.id === donationType)?.title}`,
+        image: '/favicon.ico',
+        order_id: paymentData.receipt,
+        handler: function (response) {
+          setIsProcessing(false);
+          alert(`Thank you ${donorInfo.name} for your generous donation of ₹${amount}! Payment ID: ${response.razorpay_payment_id}. Your donation receipt will be sent to ${donorInfo.email}`);
+          
+          // Reset form after successful payment
+          setSelectedAmount('');
+          setCustomAmount('');
+          setShowDonorForm(false);
+          setDonorInfo({
+            name: '',
+            email: '',
+            phone: '',
+            address: '',
+            city: '',
+            state: '',
+            pincode: '',
+            panNumber: ''
+          });
+        },
+        prefill: {
+          name: donorInfo.name,
+          email: donorInfo.email,
+          contact: donorInfo.phone
+        },
+        notes: paymentData.notes,
+        theme: {
+          color: '#e2580c'
+        },
+        modal: {
+          ondismiss: function() {
+            setIsProcessing(false);
+          }
+        }
+      };
+
+      // Check if Razorpay is loaded
+      if (typeof window.Razorpay !== 'undefined') {
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      } else {
+        // Fallback to UPI payment link for demo
+        const upiLink = `upi://pay?pa=iskconbarang@paytm&pn=ISKCON%20Barang&am=${amount}&cu=INR&tn=Donation%20for%20${donationType}`;
+        window.open(upiLink, '_blank');
+        setIsProcessing(false);
+        alert('UPI payment link opened. Complete the payment in your UPI app.');
+      }
+    } catch (error) {
       setIsProcessing(false);
-      alert(`Thank you ${donorInfo.name} for your generous donation of ₹${amount} for ${donationCategories.find(cat => cat.id === donationType)?.title}! Your donation receipt will be sent to ${donorInfo.email}`);
-      
-      // Reset form
-      setSelectedAmount('');
-      setCustomAmount('');
-      setShowDonorForm(false);
-      setDonorInfo({
-        name: '',
-        email: '',
-        phone: '',
-        address: '',
-        city: '',
-        state: '',
-        pincode: '',
-        panNumber: ''
-      });
-    }, 2000);
+      alert('Payment failed. Please try again.');
+    }
   };
 
   const pageStyle = {
-    background: 'linear-gradient(135deg, #fef7ed, #f0f9ff)',
+    background: `linear-gradient(rgba(254, 247, 237, 0.9), rgba(240, 249, 255, 0.9)), url('https://images.pexels.com/photos/8828489/pexels-photo-8828489.jpeg?auto=compress&cs=tinysrgb&w=1600')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed',
     minHeight: '100vh',
     padding: '2rem 0'
   };

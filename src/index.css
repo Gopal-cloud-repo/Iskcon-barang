@@ -321,6 +321,52 @@ p {
   .amount-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  
+  /* Mobile responsive adjustments */
+  .hero {
+    padding: 4rem 0;
+  }
+  
+  .hero-logo {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
+  
+  .card {
+    padding: 1.5rem;
+  }
+  
+  /* Background image adjustments for mobile */
+  .hero,
+  .services,
+  .events,
+  .cta {
+    background-attachment: scroll !important;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .card {
+    padding: 1rem;
+  }
+  
+  .amount-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Icon styles */

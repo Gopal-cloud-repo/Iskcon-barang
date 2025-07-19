@@ -72,7 +72,10 @@ const About = () => {
   ];
 
   const pageStyle = {
-    background: 'linear-gradient(135deg, #fef7ed, #f0f9ff)',
+    background: `linear-gradient(rgba(254, 247, 237, 0.9), rgba(240, 249, 255, 0.9)), url('https://images.pexels.com/photos/8828489/pexels-photo-8828489.jpeg?auto=compress&cs=tinysrgb&w=1600')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed',
     minHeight: '100vh',
     padding: '3rem 0'
   };
