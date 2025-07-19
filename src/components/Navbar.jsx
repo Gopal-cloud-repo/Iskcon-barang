@@ -140,6 +140,13 @@ const Navbar = () => {
               <span>Home</span>
             </Link>
             <Link
+              to="/donation"
+              style={navLinkStyle(isActive('/donation'))}
+            >
+              <Heart size={16} />
+              <span>Donate</span>
+            </Link>
+            <Link
               to="/about"
               style={navLinkStyle(isActive('/about'))}
             >
@@ -152,13 +159,6 @@ const Navbar = () => {
             >
               <Phone size={16} />
               <span>Contact</span>
-            </Link>
-            <Link
-              to="/donation"
-              style={navLinkStyle(isActive('/donation'))}
-            >
-              <Heart size={16} />
-              <span>Donate</span>
             </Link>
           </div>
 
@@ -182,6 +182,14 @@ const Navbar = () => {
             <span>Home</span>
           </Link>
           <Link
+            to="/donation"
+            onClick={() => setIsOpen(false)}
+            style={mobileNavLinkStyle(isActive('/donation'))}
+          >
+            <Heart size={18} />
+            <span>Donate</span>
+          </Link>
+          <Link
             to="/about"
             onClick={() => setIsOpen(false)}
             style={mobileNavLinkStyle(isActive('/about'))}
@@ -196,14 +204,6 @@ const Navbar = () => {
           >
             <Phone size={18} />
             <span>Contact</span>
-          </Link>
-          <Link
-            to="/donation"
-            onClick={() => setIsOpen(false)}
-            style={mobileNavLinkStyle(isActive('/donation'))}
-          >
-            <Heart size={18} />
-            <span>Donate</span>
           </Link>
         </div>
       </div>
